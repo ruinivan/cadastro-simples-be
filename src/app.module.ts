@@ -4,9 +4,7 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://victor:senhabanco@estudo.mk85lop.mongodb.net/cadastro-simples',
-    ),
+    MongooseModule.forRoot('mongodb://localhost:27017/cadastro-simples'),
     UsersModule,
   ],
   controllers: [],

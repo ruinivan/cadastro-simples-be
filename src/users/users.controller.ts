@@ -39,13 +39,13 @@ export class UsersController {
     return findUser;
   }
 
-  // @Patch(':id')
-  // @UsePipes(new ValidationPipe())
-  // async updateUser(@Param('id') id: string, @Body() this.updateUserDto: UpdateUserDto) {
-  //   const Invalid = moongoose.Types.ObjectId.isValid(id);
-  //   if (!Invalid) throw new HttpException('ID invalido', 404);
-  //   const findUser = await this.usersService.getUserById(id);
-  //   if (!findUser) throw new HttpException('Usuario nao encontrado', 404);
-  //   return this.usersService.updateUser(id, body);
-  // }
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    const Invalid = moongoose.Types.ObjectId.isValid(id);
+    if (!Invalid) throw new HttpException('ID invalido', 404);
+    const findUser = await this.usersService.getUserById(id);
+    if (!findUser) throw new HttpException('Usuario nao encontrado', 404);
+    return this.usersService.updateUser(id, body);
+  }
 }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+@Schema({ collection: 'User' })
 export class User {
   @Prop({ unique: true, required: true })
   nome: string;
