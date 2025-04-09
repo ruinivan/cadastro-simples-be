@@ -8,6 +8,7 @@ import {
   Param,
   HttpException,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UsersService } from './users.service';
@@ -21,7 +22,6 @@ export class UsersController {
   @Post()
   @UsePipes(new ValidationPipe())
   createUser(@Body() CreateUserDto: CreateUserDto) {
-    console.log(CreateUserDto);
     return this.usersService.createUser(CreateUserDto);
   }
 
@@ -44,8 +44,17 @@ export class UsersController {
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     const Invalid = moongoose.Types.ObjectId.isValid(id);
     if (!Invalid) throw new HttpException('ID invalido', 404);
-    const findUser = await this.usersService.getUserById(id);
+    const findUser = await this.usersService.updateUser(id, body);
     if (!findUser) throw new HttpException('Usuario nao encontrado', 404);
     return this.usersService.updateUser(id, body);
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    const Invalid = moongoose.Types.ObjectId.isValid(id);
+    if (!Invalid) throw new HttpException('ID invalido', 404);
+    const deleteUser = await this.usersService.deleteUser(id);
+    if (!deleteUser) throw new HttpException('Usuario nao encontrado', 404);
+    return this.usersService.deleteUser(id);
   }
 }

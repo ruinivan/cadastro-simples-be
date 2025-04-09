@@ -25,7 +25,10 @@ export class UsersService {
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
-    const updateUser = this.userModel.findByIdAndUpdate(id, updateUserDto);
-    return updateUser;
+    return this.userModel.findByIdAndUpdate(id, updateUserDto);
+  }
+
+  deleteUser(id: string) {
+    return this.userModel.findByIdAndDelete(id);
   }
 }
