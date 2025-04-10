@@ -11,9 +11,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/CreateUser.dto';
+import { LoginUserDto } from './dto/LoginUser.dto';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UsersService } from './users.service';
 import * as moongoose from 'mongoose';
-import { UpdateUserDto } from './dto/UpdateUser.dto';
 
 @Controller('usuarios')
 export class UsersController {
@@ -21,8 +22,14 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  createUser(@Body() CreateUserDto: CreateUserDto) {
+  async createUser(@Body() CreateUserDto: CreateUserDto) {
     return this.usersService.createUser(CreateUserDto);
+  }
+
+  @Post('login')
+  @UsePipes(new ValidationPipe())
+  async loginUser(@Body() LoginUserDto: LoginUserDto) {
+    return this.usersService.loginUser(LoginUserDto);
   }
 
   @Get()
@@ -33,7 +40,7 @@ export class UsersController {
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID invalido', 404);
+    if (!Invalid) throw new HttpException('ID invalido', 400);
     const findUser = await this.usersService.getUserById(id);
     if (!findUser) throw new HttpException('Usuario nao encontrado', 404);
     return findUser;
@@ -43,7 +50,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID invalido', 404);
+    if (!Invalid) throw new HttpException('ID invalido', 400);
     const findUser = await this.usersService.updateUser(id, body);
     if (!findUser) throw new HttpException('Usuario nao encontrado', 404);
     return this.usersService.updateUser(id, body);
@@ -52,9 +59,9 @@ export class UsersController {
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID invalido', 404);
+    if (!Invalid) throw new HttpException('ID invalido', 400);
     const deleteUser = await this.usersService.deleteUser(id);
     if (!deleteUser) throw new HttpException('Usuario nao encontrado', 404);
-    return this.usersService.deleteUser(id);
+    throw new HttpException('Usuario deletado com sucesso', 200);
   }
 }

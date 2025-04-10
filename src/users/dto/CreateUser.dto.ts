@@ -16,7 +16,11 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty()
+  @IsString()
+  senha: string;
+
   @IsDateString()
+  @IsOptional()
   dataNascimento: string;
 
   @IsString()
