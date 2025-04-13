@@ -22,8 +22,9 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  async createUser(@Body() CreateUserDto: CreateUserDto) {
-    return this.usersService.createUser(CreateUserDto);
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    const newUser = await this.usersService.createUser(createUserDto);
+    if (newUser !== undefined) throw new HttpException('New User Created', 201);
   }
 
   @Post('login')
