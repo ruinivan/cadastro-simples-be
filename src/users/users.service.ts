@@ -11,12 +11,10 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    // Procurar se ja existe um usuario com o mesmo nome
-    // Caso sim retornar uma mensagem de erro amigavel
     const userExists = await this.userModel.findOne({
-      nome: createUserDto.nome,
+      email: createUserDto.email,
     });
-    if (userExists) throw new HttpException('Usuario ja existe', 400);
+    if (userExists) throw new HttpException('User Already Exist', 400);
     const newUser = new this.userModel(createUserDto);
     return newUser.save();
   }
@@ -24,9 +22,9 @@ export class UsersService {
   async loginUser(LoginUserDto: LoginUserDto) {
     const userExists = await this.userModel.findOne({
       email: LoginUserDto.email,
-      senha: LoginUserDto.senha,
+      password: LoginUserDto.password,
     });
-    if (!userExists) throw new HttpException('Usuario nao existe', 400);
+    if (!userExists) throw new HttpException('User Dont Exist', 400);
     return userExists;
   }
 

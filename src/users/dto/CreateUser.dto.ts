@@ -9,7 +9,7 @@ import {
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
-  nome: string;
+  name: string;
 
   @IsNotEmpty()
   @IsEmail()
@@ -17,13 +17,13 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  senha: string;
+  password: string;
 
   @IsDateString()
   @IsOptional()
-  dataNascimento: string;
+  birthDay?: string;
 
   @IsString()
   @IsOptional()
-  telefone?: string;
+  telephone?: string;
 }
