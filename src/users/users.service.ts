@@ -14,7 +14,11 @@ export class UsersService {
     const userExists = await this.userModel.findOne({
       email: createUserDto.email,
     });
+<<<<<<< HEAD
     if (userExists) throw new HttpException('User Already Exists', 400);
+=======
+    if (userExists) throw new HttpException('User Already Exist', 400);
+>>>>>>> 8e86ce443b84955f1caa0a66af1546e50f4ec6ee
     const newUser = new this.userModel(createUserDto);
     return newUser.save();
   }
@@ -24,10 +28,7 @@ export class UsersService {
       email: LoginUserDto.email,
       password: LoginUserDto.password,
     });
-
-    console.log(userExists);
-
-    if (!userExists) throw new HttpException('User Dont Exists', 400);
+    if (!userExists) throw new HttpException('User Dont Exist', 400);
     return userExists;
   }
 
