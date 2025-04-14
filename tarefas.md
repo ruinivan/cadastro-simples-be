@@ -17,7 +17,7 @@ Usuários
 
 Login
 
-[POST] /login – Simular o login de um usuário (sem autenticação real) []
+[POST] /login – Simular o login de um usuário (sem autenticação real) [x]
 
 Observação: A rota de login deve verificar se o e-mail e a senha existem no banco e retornar uma resposta de sucesso ou erro. Não utilizar autenticação JWT.
 
