@@ -31,10 +31,10 @@ export class UsersService {
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto);
+    return this.authService.validateUpdateUser(id, updateUserDto);
   }
 
-  deleteUser(id: string) {
-    return this.userModel.findByIdAndDelete(id);
+  async deleteUser(id: string) {
+    await this.authService.validateDeleteUser(id);
   }
 }

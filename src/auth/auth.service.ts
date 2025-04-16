@@ -4,7 +4,9 @@ import { CreateUserDto } from './../users/dto/CreateUser.dto';
 import { Model } from 'mongoose';
 import { User } from 'src/schemas/User.schemas';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateUserDto } from '../users/dto/UpdateUser.dto';
 import * as bcrypt from 'bcrypt';
+import * as moongoose from 'mongoose';
 
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -24,7 +26,8 @@ export class AuthService {
     else {
       if (typeof createUserDto.name === 'string') {
         createUserDto.password = await bcrypt.hash(createUserDto.password, 10);
-        return new this.userModel(createUserDto).save();
+        await new this.userModel(createUserDto).save();
+        throw new HttpException('User created sucessfully', 201);
       } else {
         throw new HttpException('Password Invalid', 400);
       }
@@ -42,5 +45,23 @@ export class AuthService {
       if (passwordMatch) throw new HttpException('Login Success', 200);
       else throw new HttpException('Email or password wrong', 400);
     } else throw new HttpException('Email or password wrong', 400);
+  }
+
+  async validateUpdateUser(id: string, updateUserDto: UpdateUserDto) {
+    const Invalid = moongoose.Types.ObjectId.isValid(id);
+    if (!Invalid) throw new HttpException('ID Invalid', 400);
+    const findUser = await this.userModel.findById(id);
+    if (!findUser) throw new HttpException('User Dont Found', 404);
+    await this.userModel.findByIdAndUpdate(id, updateUserDto);
+    throw new HttpException('User updated sucessfully', 200);
+  }
+
+  async validateDeleteUser(id: string) {
+    const Invalid = moongoose.Types.ObjectId.isValid(id);
+    if (!Invalid) throw new HttpException('ID Invalid', 400);
+    const deleteUser = await this.userModel.findById(id);
+    if (!deleteUser) throw new HttpException('User Dont Found', 404);
+    this.userModel.findByIdAndDelete(id);
+    throw new HttpException('User deleted sucessfully', 200);
   }
 }

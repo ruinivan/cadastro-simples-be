@@ -49,19 +49,11 @@ export class UsersController {
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID Invalid', 400);
-    const findUser = await this.usersService.updateUser(id, body);
-    if (!findUser) throw new HttpException('User Dont Found', 404);
     return this.usersService.updateUser(id, body);
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID Invalid', 400);
-    const deleteUser = await this.usersService.deleteUser(id);
-    if (!deleteUser) throw new HttpException('User Dont Found', 404);
-    throw new HttpException('User Successfully Deleted', 200);
+  deleteUser(@Param('id') id: string) {
+    this.usersService.deleteUser(id);
   }
 }
