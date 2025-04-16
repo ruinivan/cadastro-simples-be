@@ -39,9 +39,8 @@ export class AuthService {
         loginUserDto.password,
         user.password,
       );
-      if (passwordMatch) {
-        throw new HttpException('Login Success', 200);
-      }
-    } else if (!user) throw new HttpException('Email or password wrong', 400);
+      if (passwordMatch) throw new HttpException('Login Success', 200);
+      else throw new HttpException('Email or password wrong', 400);
+    } else throw new HttpException('Email or password wrong', 400);
   }
 }
