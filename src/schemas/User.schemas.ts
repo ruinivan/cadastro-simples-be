@@ -12,10 +12,10 @@ export class User {
   password: string;
 
   @Prop({ required: false })
-  birthDay: string;
+  birthDay?: string;
 
   @Prop({ required: false })
-  telephone?: number;
+  telephone?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
