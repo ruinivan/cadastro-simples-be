@@ -61,7 +61,6 @@ export class AuthService {
     if (!Invalid) throw new HttpException('ID Invalid', 400);
     const deleteUser = await this.userModel.findById(id);
     if (!deleteUser) throw new HttpException('User Dont Found', 404);
-    this.userModel.findByIdAndDelete(id);
-    throw new HttpException('User deleted sucessfully', 200);
+    return this.userModel.findByIdAndDelete(id);
   }
 }
