@@ -15,11 +15,11 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    await this.authService.validadeCreateUser(createUserDto);
+    await this.authService.validateCreateUser(createUserDto);
   }
 
   async loginUser(loginUserDto: LoginUserDto) {
-    return await this.authService.validadeLoginUser(loginUserDto);
+    return await this.authService.validateLoginUser(loginUserDto);
   }
 
   getUsers() {
@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   getUserById(id: string) {
-    return this.userModel.findById(id);
+    return this.authService.validateGetUser(id);
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {

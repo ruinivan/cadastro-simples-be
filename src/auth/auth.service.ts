@@ -10,7 +10,7 @@ import * as moongoose from 'mongoose';
 
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-  async validadeCreateUser(createUserDto: CreateUserDto) {
+  async validateCreateUser(createUserDto: CreateUserDto) {
     const userExist = await this.userModel.findOne({
       email: createUserDto.email,
     });
@@ -33,7 +33,7 @@ export class AuthService {
       }
     }
   }
-  async validadeLoginUser(loginUserDto: LoginUserDto) {
+  async validateLoginUser(loginUserDto: LoginUserDto) {
     const user = await this.userModel.findOne({
       email: loginUserDto.email,
     });
@@ -47,13 +47,32 @@ export class AuthService {
     } else throw new HttpException('Email or password wrong', 400);
   }
 
+  async validateGetUser(id: string) {
+    const Invalid = moongoose.Types.ObjectId.isValid(id);
+    if (!Invalid) throw new HttpException('ID Invalid', 400);
+    const findUser = await this.userModel.findById(id);
+    if (!findUser) throw new HttpException('User Dont Found', 404);
+    return findUser;
+  }
+
   async validateUpdateUser(id: string, updateUserDto: UpdateUserDto) {
     const Invalid = moongoose.Types.ObjectId.isValid(id);
     if (!Invalid) throw new HttpException('ID Invalid', 400);
     const findUser = await this.userModel.findById(id);
     if (!findUser) throw new HttpException('User Dont Found', 404);
-    await this.userModel.findByIdAndUpdate(id, updateUserDto);
-    throw new HttpException('User updated sucessfully', 200);
+    if (updateUserDto.password.length < 8)
+      throw new HttpException('Password Too Short', 400);
+    if (updateUserDto.password.length > 20)
+      throw new HttpException('Password Too Long', 400);
+    if (updateUserDto.name.length < 3)
+      throw new HttpException('Name Too Short', 400);
+    if (updateUserDto.name.length > 20)
+      throw new HttpException('Name Too Long', 400);
+    else {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      await this.userModel.findByIdAndUpdate(id, updateUserDto);
+      throw new HttpException('User updated sucessfully', 200);
+    }
   }
 
   async validateDeleteUser(id: string) {

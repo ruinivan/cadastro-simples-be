@@ -6,7 +6,6 @@ import {
   UsePipes,
   ValidationPipe,
   Param,
-  HttpException,
   Patch,
   Delete,
 } from '@nestjs/common';
@@ -14,7 +13,6 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UsersService } from './users.service';
-import * as moongoose from 'mongoose';
 
 @Controller('user')
 export class UsersController {
@@ -39,11 +37,7 @@ export class UsersController {
 
   @Get(':id')
   async getUserById(@Param('id') id: string) {
-    const Invalid = moongoose.Types.ObjectId.isValid(id);
-    if (!Invalid) throw new HttpException('ID Invalid', 400);
-    const findUser = await this.usersService.getUserById(id);
-    if (!findUser) throw new HttpException('User Dont Found', 404);
-    return findUser;
+    return await this.usersService.getUserById(id);
   }
 
   @Patch(':id')
